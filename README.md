@@ -2,10 +2,20 @@
 Hexapod-Bastel-Projekt 
 
 # Material 
-2x Joystick > https://a.aliexpress.com/_EH6XYs2
-2x servo Treiber > https://a.aliexpress.com/_EyEl6Gi
-1x Potentiometer > https://a.aliexpress.com/_EuWDJCW
-2x RF Antenne > https://a.aliexpress.com/_ExmUaga
+1x Arduino nano
+2x Joystick
+nx buttons
+1x Potentiometer
+1x lipo akku
+1x RF Antenne
+3x RGB LED 
+
+1x esp 32
+1x RF Antenne > 
+16x Servo 
+2x servo Treiber > 
+3x RGB LED 
+
 
 
 naaahnich mach das besser in eine Excel Tabelle 
