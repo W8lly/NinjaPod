@@ -1,3 +1,29 @@
+/*
+ * ============================================
+ * EMPFÄNGER - RGB-LED per Funk steuern
+ * ============================================
+ * 
+ * VERKABELUNG:
+ * ------------
+ * nRF24L01 Funkmodul:
+ *   VCC  → 3.3V  (ACHTUNG: NICHT 5V!)
+ *   GND  → GND
+ *   CE   → Pin 9
+ *   CSN  → Pin 10
+ *   SCK  → Pin 13
+ *   MOSI → Pin 11
+ *   MISO → Pin 12
+ * 
+ * RGB-LED (gemeinsame Kathode):
+ *   Kathode (-) → GND (über 220Ω Widerstand)
+ *   Rot (Anode) → Pin 4 (über 220Ω Widerstand)
+ *   Grün (Anode) → Pin 2 (über 220Ω Widerstand)
+ *   Blau (Anode) → Pin 3 (über 220Ω Widerstand)
+ * 
+ * ============================================
+ */
+
+
 // ----- Funkmodul-Bibliotheken -----
 #include <SPI.h>
 #include <nRF24L01.h>
