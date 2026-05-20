@@ -1,42 +1,58 @@
+// ----- Funkmodul-Bibliotheken -----
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
- 
-RF24 radio(9, 10); // CE, CSN
- 
+
+// Funkmodul an Pin 9 (CE) und 10 (CSN)
+RF24 radio(9, 10);
+
+// Gemeinsamer geheimer Kanal mit dem Empfänger
 const byte address[6] = "00001";
 
-const int VRx = A0;
-const int VRy = A1;
-const int SW = 2;      // Joystick-Button
-
+// Joystick-Anschlüsse
+const int VRx = A0;   // X-Achse (links/rechts)
+const int VRy = A1;   // Y-Achse (oben/unten)
+const int SW = 2;     // Knopf (digital)
 
 void setup() {
- pinMode(SW, INPUT_PULLUP);
+  // Knopf-Pin als Eingang (interner Pull-up-Widerstand aktivieren)
+  pinMode(SW, INPUT_PULLUP);
+
+  // Seriellen Monitor starten
   Serial.begin(9600);
+
+  // Funkmodul starten
   radio.begin();
-  radio.openWritingPipe(address);
-  radio.setPALevel(RF24_PA_LOW);
-  radio.stopListening();
+  radio.openWritingPipe(address); // Sende-Kanal einstellen
+  radio.setPALevel(RF24_PA_LOW);  // Niedrige Sendeleistung
+  radio.stopListening();          // Nicht hören, sondern senden
 }
- 
+
 void loop() {
+  // Joystick-Werte lesen
   int xValue = analogRead(VRx);
   int yValue = analogRead(VRy);
-  int buttonState = digitalRead(SW);
+  int buttonState = digitalRead(SW); // LOW = gedrückt (weil INPUT_PULLUP)
 
-  if (!radio.isChipConnected()){
-    Serial.println("radio not connected");
-   delay(1000);
+  // Prüfen, ob Funkmodul an ist
+  if (!radio.isChipConnected()) {
+    Serial.println("Funkmodul nicht angeschlossen!");
+    delay(1000);
   }
- char msg = 'G';
- radio.write(&msg, sizeof(msg));
- 
- Serial.print("X: ");
+
+  // BUH – hier ist das Problem:
+  // Es wird JEDES MAL 'G' (Blau) gesendet, egal was der Joystick macht.
+  char msg = 'G';
+  radio.write(&msg, sizeof(msg));
+
+  // Werte auf dem Serial Monitor anzeigen (nur zur Kontrolle)
+  Serial.print("X: ");
   Serial.print(xValue);
   Serial.print(" | Y: ");
   Serial.print(yValue);
-  Serial.print(" | Button: ");
-  Serial.println(buttonState == LOW ? "Pressed" : "Released");
-  
+  Serial.print(" | Knopf: ");
+  Serial.println(buttonState == LOW ? "Gedrückt" : "Losgelassen");
+
+  // Kurze Pause, sonst spammt es zu sehr
+  delay(50);
 }
