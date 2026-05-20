@@ -1,3 +1,30 @@
+/*
+ * ============================================
+ * SENDER - Joystick per Funk an Empfänger senden
+ * ============================================
+ * 
+ * VERKABELUNG:
+ * ------------
+ * nRF24L01 Funkmodul:
+ *   VCC  → 3.3V  (ACHTUNG: NICHT 5V!)
+ *   GND  → GND
+ *   CE   → Pin 9
+ *   CSN  → Pin 10
+ *   SCK  → Pin 13
+ *   MOSI → Pin 11
+ *   MISO → Pin 12
+ * 
+ * Joystick-Modul:
+ *   GND  → GND
+ *   +5V  → 5V
+ *   VRx  → A0  (X-Achse, links/rechts)
+ *   VRy  → A1  (Y-Achse, oben/unten)
+ *   SW   → Pin 2 (Knopf, mit INPUT_PULLUP)
+ * 
+ * ============================================
+ */
+
+
 // ----- Welche Pins für die RGB-LED? -----
 const int RED_PIN = 4;   // Roter Licht-Pin
 const int GREEN_PIN = 2; // Grüner Licht-Pin
