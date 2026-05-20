@@ -1,58 +1,66 @@
+// ----- Welche Pins für die RGB-LED? -----
+const int RED_PIN = 4;   // Roter Licht-Pin
+const int GREEN_PIN = 2; // Grüner Licht-Pin
+const int BLUE_PIN = 3;  // Blauer Licht-Pin
 
-
-// Pin-Zuweisung
-const int RED_PIN = 4;
-const int GREEN_PIN = 2;
-const int BLUE_PIN = 3;
- 
-// Aktueller Farbwert (0–255)
+// ----- Aktuelle Farbwerte (später vielleicht mal nützlich) -----
 int red = 0;
 int green = 0;
 int blue = 0;
- 
+
+// ----- Funkmodul-Bibliotheken -----
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
- 
-RF24 radio(9, 10); // CE, CSN
+
+// ----- Funkmodul anschließen: CE an Pin 9, CSN an Pin 10 -----
+RF24 radio(9, 10);
+
+// ----- Gemeinsame Funk-Adresse (wie ein geheimer Kanal) -----
 const byte address[6] = "00001";
- 
+
 void setup() {
-   pinMode(RED_PIN, OUTPUT);
+  // LED-Pins als Ausgang schalten
+  pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(BLUE_PIN, OUTPUT);
+
+  // Seriellen Monitor starten (zum Debuggen)
   Serial.begin(9600);
+
+  // Funkmodul starten
   radio.begin();
-  radio.openReadingPipe(0, address);
-  radio.setPALevel(RF24_PA_LOW);
-  radio.startListening();
+  radio.openReadingPipe(0, address); // Empfangs-Kanal einstellen
+  radio.setPALevel(RF24_PA_LOW);     // Sendeleistung niedrig (reicht für kurze Distanz)
+  radio.startListening();            // Auf Empfang stellen (Hören)
 }
- 
+
 void loop() {
-  if (!radio.isChipConnected()){
-    Serial.println("radio not connected");
+  // Prüfen, ob Funkmodul überhaupt an ist
+  if (!radio.isChipConnected()) {
+    Serial.println("Funkmodul nicht angeschlossen!");
     delay(1000);
   }
+
+  // Wenn Daten ankommen ...
   if (radio.available()) {
-    char received;
-    radio.read(&received, sizeof(received));
+    char received;                         // Platz für empfangenes Zeichen
+    radio.read(&received, sizeof(received)); // Zeichen lesen
     Serial.print("Empfangen: ");
     Serial.println(received);
- 
+
+    // Je nach Buchstabe: andere Farbe einschalten
     if (received == 'F') {
-      setColor(255, 0, 0);  // LED an
+      setColor(255, 0, 0);  // Rot
     } else if (received == 'T') {
-      setColor(0, 255, 0);   // LED aus
-    }
-    else if (received == 'G') {
-      setColor(0, 0, 255);
+      setColor(0, 255, 0);  // Grün
+    } else if (received == 'G') {
+      setColor(0, 0, 255);  // Blau
     }
   }
-  //else{
-    //Serial.println("no radio available");
-    //delay(1000);
-  //}
 }
+
+// ----- Eigene Funktion: LED-Farbe setzen (Rot, Grün, Blau jeweils 0-255) -----
 void setColor(int r, int g, int b) {
   analogWrite(RED_PIN, r);
   analogWrite(GREEN_PIN, g);
